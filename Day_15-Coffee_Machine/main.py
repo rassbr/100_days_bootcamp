@@ -71,8 +71,9 @@ def deduct_resources(drink):
 def coffee_machine():
     print('What would you like? (espresso/latte/cappuccino):')
     ans = input()
+
     question = "Please choose one of the options - espresso/latte/cappuccino:"
-    while ans != "espresso" and ans != 'latte' and ans != 'cappuccino' and ans != 'report':
+    while ans != "espresso" and ans != 'latte' and ans != 'cappuccino' and ans != 'report' and ans != 'off':
         ans = invalid_input(question)
         print(ans)
 
@@ -81,6 +82,8 @@ def coffee_machine():
         print('Milk: ' + str(resources['milk'])+'ml')
         print('Coffee: ' + str(resources['coffee'])+'g')
         print('Money: $' + str(resources['money']))
+    elif ans == 'off':
+        return True
     else:
         if check_resources(ans) != True:
             return
