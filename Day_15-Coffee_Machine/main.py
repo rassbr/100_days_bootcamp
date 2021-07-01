@@ -37,6 +37,7 @@ def invalid_input(questions):
     return input()
 
 def insert_coins():
+    """Returns the total value of the coins inserted"""
     coins = ['quarters', 'dimes', 'nickles', 'pennies']
     my_dict = dict.fromkeys(coins,None)
     for i in coins:
@@ -45,12 +46,13 @@ def insert_coins():
         ans = input()
         while not ans.isalnum():
             ans = invalid_input(questions)
-        my_dict[i] = float(ans)
-    my_sum = my_dict['quarters'] + my_dict['dimes'] + my_dict['nickles'] + my_dict['pennies']
-    return my_sum
+        my_dict[i] = int(ans)
+    my_sum = my_dict['quarters']*0.25 + my_dict['dimes']*.1 + my_dict['nickles']*.05 + my_dict['pennies']*.01
+    return round(my_sum,2)
 
 
 def check_resources(drink):
+    """Returns True if there are enough resources, else it returns False"""
     ingredients = MENU[drink]['ingredients']
     ings = ingredients.keys()
     for i in ings:
@@ -61,6 +63,7 @@ def check_resources(drink):
 
 
 def deduct_resources(drink):
+    """Executes the trade money for coffee."""
     ingredients = MENU[drink]['ingredients']
     ings = ingredients.keys()
     for i in ings:
@@ -96,7 +99,7 @@ def coffee_machine():
             elif paid == price:
                 pass
             else:
-                print(f"Sorry your selected coffee costs ${price}, so that's not enough money. Money refunded")
+                print(f"Sorry your selected coffee costs ${price}, so ${paid} is not enough money. Money refunded")
                 return
             deduct_resources(ans)
             print(f"Here is your {ans}. Enjoy!")
