@@ -1,16 +1,105 @@
-# This is a sample Python script.
+MENU = {
+    "espresso": {
+        "ingredients": {
+            "water": 50,
+            "coffee": 18,
+        },
+        "cost": 1.5,
+    },
+    "latte": {
+        "ingredients": {
+            "water": 200,
+            "milk": 150,
+            "coffee": 24,
+        },
+        "cost": 2.5,
+    },
+    "cappuccino": {
+        "ingredients": {
+            "water": 250,
+            "milk": 100,
+            "coffee": 24,
+        },
+        "cost": 3.0,
+    }
+}
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+resources = {
+    "water": 300,
+    "milk": 200,
+    "coffee": 100,
+    "money": 10.0,
+}
+
+def invalid_input(questions):
+    print('Invalid answer!')
+    print(questions)
+    return input()
+
+def insert_coins():
+    coins = ['quarters', 'dimes', 'nickles', 'pennies']
+    my_dict = dict.fromkeys(coins,None)
+    for i in coins:
+        questions = 'how many ' + i + '? - '
+        print(questions)
+        ans = input()
+        while not ans.isalnum():
+            ans = invalid_input(questions)
+        my_dict[i] = float(ans)
+    my_sum = my_dict['quarters'] + my_dict['dimes'] + my_dict['nickles'] + my_dict['pennies']
+    return my_sum
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+def check_resources(drink):
+    ingredients = MENU[drink]['ingredients']
+    ings = ingredients.keys()
+    for i in ings:
+        if resources[i] < ingredients[i]:
+            print(f"Sorry there is not enough {i}.")
+            return False
+    return True
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+def deduct_resources(drink):
+    ingredients = MENU[drink]['ingredients']
+    ings = ingredients.keys()
+    for i in ings:
+        resources[i] = resources[i] - ingredients[i]
+    resources["money"] = resources["money"] + MENU[drink]['cost']
+    return
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+def coffee_machine():
+    print('What would you like? (espresso/latte/cappuccino):')
+    ans = input()
+    question = "Please choose one of the options - espresso/latte/cappuccino:"
+    while ans != "espresso" and ans != 'latte' and ans != 'cappuccino' and ans != 'report':
+        ans = invalid_input(question)
+        print(ans)
+
+    if ans == 'report':
+        print("Water: " + str(resources['water'])+'ml')
+        print('Milk: ' + str(resources['milk'])+'ml')
+        print('Coffee: ' + str(resources['coffee'])+'g')
+        print('Money: $' + str(resources['money']))
+    else:
+        if check_resources(ans) != True:
+            return
+        else:
+            price = MENU[ans]['cost']
+            paid = insert_coins()
+            if paid > price:
+                change = paid - price
+                print(f"Here is your ${change} in change")
+            elif paid == price:
+                pass
+            else:
+                print(f"Sorry your selected coffee costs ${price}, so that's not enough money. Money refunded")
+                return
+            deduct_resources(ans)
+            print(f"Here is your {ans}. Enjoy!")
+            return
+
+
+stop = False
+while not stop == True:
+    stop = coffee_machine()
